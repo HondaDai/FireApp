@@ -85,7 +85,7 @@ begin
 
 
 
-    %w{compilation_cache base_compiler coffeescript_compiler livescript_compiler less_compiler}.each do | f |
+    %w{compilation_cache base_compiler coffeescript_compiler livescript_compiler less_compiler stylus_compiler}.each do | f |
       require "compiler/#{f}"
     end
     

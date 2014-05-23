@@ -25,6 +25,7 @@ module Compass
         @watchers += custom_watcher(Compass.configuration.fireapp_coffeescripts_dir, "*.coffee", method(:coffee_callback))
         @watchers += custom_watcher(Compass.configuration.fireapp_livescripts_dir, "*.ls", method(:livescript_callback))
         @watchers += custom_watcher(Compass.configuration.fireapp_less_dir, "*.less", method(:less_callback))
+        @watchers += custom_watcher(Compass.configuration.fireapp_stylus_dir, "*.styl", method(:stylus_callback))
 
         setup_listener
       end
@@ -107,6 +108,14 @@ module Compass
         LessCompiler.compile_folder( Compass.configuration.fireapp_less_dir,
                                       Compass.configuration.css_dir, 
                                       Compass.configuration.fireapp_less_options );
+      end
+
+      def stylus_callback(base, file, action)
+        log_action(:info, "#{file} was #{action}", options)
+        puts( "#{file} was #{action}", options)
+        StylusCompiler.compile_folder( Compass.configuration.fireapp_stylus_dir,
+                                      Compass.configuration.css_dir, 
+                                      Compass.configuration.fireapp_stylus_options );
       end
 
       def livereload_watchers

@@ -28,6 +28,14 @@ module Compass
     {}
   end
 
+  #-- stylus --
+  Configuration.add_configuration_property(:fireapp_stylus_dir, nil) do
+    "stylus"
+  end
+  Configuration.add_configuration_property(:fireapp_stylus_options, nil) do
+    {}
+  end
+
   #-- less --
   Configuration.add_configuration_property(:fireapp_less_dir, nil) do
     "less"
@@ -87,6 +95,9 @@ module Compass
         if File.exists?( Compass.configuration.fireapp_less_dir )
           LessCompiler.compile_folder( Compass.configuration.fireapp_less_dir, Compass.configuration.css_dir, Compass.configuration.fireapp_less_options );
         end
+        if File.exists?( Compass.configuration.fireapp_stylus_dir )
+          StylusCompiler.compile_folder( Compass.configuration.fireapp_stylus_dir, Compass.configuration.css_dir, Compass.configuration.fireapp_less_options );
+        end
         compiler = new_compiler_instance
         check_for_sass_files!(compiler)
         compiler.clean! if compiler.new_config?
@@ -105,6 +116,9 @@ module Compass
         end
         if File.exists?( Compass.configuration.fireapp_less_dir )
           LessCompiler.clean_folder(Compass.configuration.fireapp_less_dir, Compass.configuration.css_dir )
+        end
+        if File.exists?( Compass.configuration.fireapp_stylus_dir )
+          StylusCompiler.clean_folder(Compass.configuration.fireapp_stylus_dir, Compass.configuration.css_dir )
         end
         compiler = new_compiler_instance
         compiler.clean!
