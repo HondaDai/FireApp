@@ -53,6 +53,8 @@ module Swt
     import org.eclipse.swt.widgets.Text
     import org.eclipse.swt.widgets.ToolTip
     import org.eclipse.swt.widgets.TrayItem
+    import org.eclipse.swt.widgets.Tree
+    import org.eclipse.swt.widgets.TreeItem
   end
 
   def self.display
