@@ -49,16 +49,6 @@ class SassConvertPanel
     horizontal_separator = build_separator(panel_title_label)
 
 
-    # -- context group --
-    @general_group = build_general_group(horizontal_separator)
-    @coffeescript_group = build_coffeescript_group(@general_group)
-    @livescript_group = build_livescript_group(@coffeescript_group)
-    @buildoption_group = build_buildoption_group(@livescript_group)
-
-    # -- right --
-    @sass_group = build_sass_group(@general_group)
-    #@less_group = build_less_group(@sass_group)
-    #@thehold_group = build_thehold_group(@less_group)
 
     horizontal_separator = build_separator(@buildoption_group)
     # -- control button --
