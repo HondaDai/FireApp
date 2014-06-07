@@ -23,17 +23,9 @@ class SassConvertPanel
     @shell.dispose if @shell and !@shell.isDisposed
   end
 
-  def close
-    @shell.dispose if @shell and !@shell.isDisposed
-  end
-
-  def config
-    Tray.instance.compass_project_config
-  end
-
   def create_window
     @shell = Swt::Widgets::Shell.new(@display, Swt::SWT::DIALOG_TRIM)
-    @shell.setText("Change Options")
+    @shell.setText("Sass Converter")
     @shell.setBackgroundMode(Swt::SWT::INHERIT_DEFAULT)
    
     layout = Swt::Layout::FormLayout.new
@@ -49,7 +41,7 @@ class SassConvertPanel
     end
     font=Swt::Graphics::Font.new(@display, font_data)
     panel_title_label.setFont(font)
-    panel_title_label.setText("Project Options")
+    panel_title_label.setText("Sass Converter")
     layoutdata = Swt::Layout::FormData.new(800, Swt::SWT::DEFAULT)
     panel_title_label.setLayoutData( layoutdata )
 
@@ -105,6 +97,15 @@ class SassConvertPanel
     group.setLayout( layout )
     group
 
+  end
+
+  def layoutdata(target, *opt)
+    layoutdata = Swt::Layout::FormData.new(120, Swt::SWT::DEFAULT)
+    layoutdata.left   = Swt::Layout::FormAttachment.new(target, opt[:left], Swt::SWT::LEFT ) unless opt[:left].nil?
+    layoutdata.top    = Swt::Layout::FormAttachment.new(target, opt[:top], Swt::SWT::TOP) unless opt[:top].nil?
+    layoutdata.right  = Swt::Layout::FormAttachment.new(target, opt[:right], Swt::SWT::RIGHT) unless opt[:right].nil?
+    layoutdata.bottom = Swt::Layout::FormAttachment.new(target, opt[:bottom], Swt::SWT::BOTTOM) unless opt[:bottom].nil?
+    layoutdata
   end
 
   def build_dir_label_on_general_group(group, text, align)
