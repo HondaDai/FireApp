@@ -61,9 +61,10 @@ class SassConvertPanel
     @select_dir_btn.addListener(Swt::SWT::Selection, select_handler(dir_label))
 
 
-    @dir_tree = Swt::Widgets::Tree.new(@shell, Swt::SWT::BORDER)
+    @dir_tree = DirectoryTree.new(@shell, Swt::SWT::BORDER, dir_label.getText)
     @dir_tree.setLayoutData (build_layout_data(dir_label, {left: ["left", 0], bottom: ["top", 10]}, 310, 350) )
 
+=begin
     item = Swt::Widgets::TreeItem.new(@dir_tree, Swt::SWT::NONE)
     item.setText("Node 1")
 
@@ -73,10 +74,11 @@ class SassConvertPanel
 
     item = Swt::Widgets::TreeItem.new(@dir_tree, Swt::SWT::NONE)
     item.setText("Node 3")
+=end
 
     @select_file_btn = Swt::Widgets::Button.new(@shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
     @select_file_btn.setText('>')
-    @select_file_btn.setLayoutData( build_layout_data(@dir_tree, {right: ["left", 10], center: ["top", 0]}, 70) )
+    @select_file_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], center: ["top", 0]}, 70) )
     # select_dir_btn.addListener(Swt::SWT::Selection, select_handler("QQ"))
     
     @target_tree = Swt::Widgets::Tree.new(@shell, Swt::SWT::BORDER)
@@ -84,7 +86,7 @@ class SassConvertPanel
 
 
 
-    horizontal_separator = build_separator(@dir_tree)
+    horizontal_separator = build_separator(@dir_tree.widget)
     # -- control button --
     build_control_button(horizontal_separator)
     #build_control_button(@less_group)
