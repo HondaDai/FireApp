@@ -42,7 +42,7 @@ class SassConvertPanel
     font=Swt::Graphics::Font.new(@display, font_data)
     panel_title_label.setFont(font)
     panel_title_label.setText("Sass Converter")
-    layoutdata = Swt::Layout::FormData.new(800, Swt::SWT::DEFAULT)
+    layoutdata = Swt::Layout::FormData.new(750, Swt::SWT::DEFAULT)
     panel_title_label.setLayoutData( layoutdata )
 
     # -- horizontal separator --
@@ -79,7 +79,7 @@ class SassConvertPanel
     @select_file_btn = Swt::Widgets::Button.new(@shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
     @select_file_btn.setText('>')
     @select_file_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], center: ["top", 0]}, 70) )
-    # select_dir_btn.addListener(Swt::SWT::Selection, select_handler("QQ"))
+    select_dir_btn.addListener(Swt::SWT::Selection, select_handler("QQ"))
     
     @target_tree = Swt::Widgets::Tree.new(@shell, Swt::SWT::BORDER)
     @target_tree.setLayoutData (build_layout_data(@select_file_btn, {right: ["left", 10], center: ["top", 0]}, 310, 350) )
@@ -97,7 +97,7 @@ class SassConvertPanel
 
   def build_separator(align)
     horizontal_separator = Swt::Widgets::Label.new(@shell, Swt::SWT::SEPARATOR | Swt::SWT::HORIZONTAL)
-    horizontal_separator.setLayoutData( build_layout_data(align, {left: ["left", 0], bottom: ["top", 10]}, 800) )
+    horizontal_separator.setLayoutData( build_layout_data(align, {left: ["left", 0], bottom: ["top", 10]}, 750) )
     horizontal_separator
   end
 
