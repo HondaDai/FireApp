@@ -48,6 +48,8 @@ class Tray
     item =  add_menu_item( "Open Extensions Folder", open_extensions_folder_handler, Swt::SWT::PUSH)
     item =  add_menu_item( "Preference...", preference_handler, Swt::SWT::PUSH)
 
+    item =  add_menu_item( "Sass Converter", open_sass_converter_handler, Swt::SWT::PUSH)
+    
     item =  add_menu_item( "About", open_about_link_handler, Swt::SWT::CASCADE)
     item.menu = Swt::Widgets::Menu.new( @menu )
     add_menu_item( 'Homepage',                      open_about_link_handler,   Swt::SWT::PUSH, item.menu)
@@ -175,6 +177,7 @@ class Tray
       watch(dir, {:show_progress => true})
     end
   end
+
 
   def open_dir_handler
     Swt::Widgets::Listener.impl do |method, evt|
@@ -343,6 +346,13 @@ class Tray
   def preference_handler 
     Swt::Widgets::Listener.impl do |method, evt|
       PreferencePanel.instance.open
+    end
+  end
+
+
+  def open_sass_converter_handler
+    Swt::Widgets::Listener.impl do |method, evt|
+      SassConvertPanel.instance.open
     end
   end
 

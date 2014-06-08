@@ -49,8 +49,35 @@ class SassConvertPanel
     horizontal_separator = build_separator(panel_title_label)
 
 
+    dir_label = Swt::Widgets::Label.new(@shell, Swt::SWT::PUSH)
+    dir_label.setLayoutData( build_layout_data(horizontal_separator, {left: ["left", 0], bottom: ["top", 10]}, 260) )
+    dir_label.setText("hahaha")
+    dir_label.pack
+    dir_label
 
-    horizontal_separator = build_separator(@buildoption_group)
+    select_dir_btn = Swt::Widgets::Button.new(@shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
+    select_dir_btn.setText('Select')
+    select_dir_btn.setLayoutData( build_layout_data(dir_label, {right: ["left", 1], center: ["top", 0]}, 70) )
+    select_dir_btn.addListener(Swt::SWT::Selection, select_handler("QQ"))
+    select_dir_btn
+
+
+    @dir_tree = Swt::Widgets::Tree.new(@shell, Swt::SWT::BORDER)
+    @dir_tree.setLayoutData (build_layout_data(dir_label, {left: ["left", 0], bottom: ["top", 10]}, 330, 350) )
+
+    item = Swt::Widgets::TreeItem.new(@dir_tree, Swt::SWT::NONE)
+    item.setText("Node 1")
+
+    sub_item = Swt::Widgets::TreeItem.new(item, Swt::SWT::NONE)
+    sub_item.setText("Node 2")
+
+
+    item = Swt::Widgets::TreeItem.new(@dir_tree, Swt::SWT::NONE)
+    item.setText("Node 3")
+
+
+
+    horizontal_separator = build_separator(@dir_tree)
     # -- control button --
     build_control_button(horizontal_separator)
     #build_control_button(@less_group)
@@ -61,10 +88,7 @@ class SassConvertPanel
 
   def build_separator(align)
     horizontal_separator = Swt::Widgets::Label.new(@shell, Swt::SWT::SEPARATOR | Swt::SWT::HORIZONTAL)
-    layoutdata = Swt::Layout::FormData.new(800, Swt::SWT::DEFAULT)
-    layoutdata.left = Swt::Layout::FormAttachment.new( align, 0, Swt::SWT::LEFT )
-    layoutdata.top  = Swt::Layout::FormAttachment.new( align, 10, Swt::SWT::BOTTOM)
-    horizontal_separator.setLayoutData( layoutdata )
+    horizontal_separator.setLayoutData( build_layout_data(align, {left: ["left", 0], bottom: ["top", 10]}, 800) )
     horizontal_separator
   end
 
@@ -89,12 +113,13 @@ class SassConvertPanel
 
   end
 
-  def layoutdata(target, *opt)
-    layoutdata = Swt::Layout::FormData.new(120, Swt::SWT::DEFAULT)
-    layoutdata.left   = Swt::Layout::FormAttachment.new(target, opt[:left], Swt::SWT::LEFT ) unless opt[:left].nil?
-    layoutdata.top    = Swt::Layout::FormAttachment.new(target, opt[:top], Swt::SWT::TOP) unless opt[:top].nil?
-    layoutdata.right  = Swt::Layout::FormAttachment.new(target, opt[:right], Swt::SWT::RIGHT) unless opt[:right].nil?
-    layoutdata.bottom = Swt::Layout::FormAttachment.new(target, opt[:bottom], Swt::SWT::BOTTOM) unless opt[:bottom].nil?
+  def build_layout_data(target, opt = {}, width=170, height=Swt::SWT::DEFAULT)
+    layoutdata = Swt::Layout::FormData.new(width, height)
+    layoutdata.send "#{opt[:left][0]}=".to_sym, Swt::Layout::FormAttachment.new(target, opt[:left][1].to_f, Swt::SWT::LEFT ) unless opt[:left].nil?
+    layoutdata.send "#{opt[:top][0]}=".to_sym, Swt::Layout::FormAttachment.new(target, opt[:top][1].to_f, Swt::SWT::TOP) unless opt[:top].nil?
+    layoutdata.send "#{opt[:right][0]}=".to_sym, Swt::Layout::FormAttachment.new(target, opt[:right][1].to_f, Swt::SWT::RIGHT) unless opt[:right].nil?
+    layoutdata.send "#{opt[:bottom][0]}=".to_sym, Swt::Layout::FormAttachment.new(target, opt[:bottom][1].to_f, Swt::SWT::BOTTOM) unless opt[:bottom].nil?
+    layoutdata.send "#{opt[:center][0]}=".to_sym, Swt::Layout::FormAttachment.new(target, opt[:center][1].to_f, Swt::SWT::CENTER) unless opt[:center].nil?
     layoutdata
   end
 
