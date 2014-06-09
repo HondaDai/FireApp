@@ -7,7 +7,7 @@ class SassConvertPanel
   def initialize()
     @display = Swt::Widgets::Display.get_current
     @target_dir_arr = Array.new
-    @window_width = 620
+    @window_width = 635
   end
 
   def open
@@ -35,9 +35,10 @@ class SassConvertPanel
     @shell.setBackgroundMode(Swt::SWT::INHERIT_DEFAULT)
    
     layout = Swt::Layout::FormLayout.new
-    layout.marginWidth = layout.marginHeight = 15
+    layout.marginWidth = layout.marginHeight = 4
     @shell.layout = layout
 
+=begin
     # -- panel title label --
     panel_title_label = Swt::Widgets::Label.new(@shell, Swt::SWT::LEFT)
     font_data=panel_title_label.getFont().getFontData()
@@ -53,10 +54,13 @@ class SassConvertPanel
 
     # -- horizontal separator --
     horizontal_separator = build_separator(panel_title_label)
+=end
+
 
     @tabFolder = Swt::Widgets::TabFolder.new(@shell, Swt::SWT::BORDER)
-    @tabFolder.setLayoutData( build_layout_data(horizontal_separator, {left: ["left", 0], bottom: ["top", 10]}, @window_width, 320) )
-    
+    @tabFolder.setLayoutData( build_layout_data(nil, {left: ["left", 0], bottom: ["top", 0]}, @window_width, 380) )
+
+
 
     file_selector_tab = Swt::Widgets::TabItem.new( @tabFolder, Swt::SWT::NONE)
     file_selector_tab.setControl( self.file_selector_composite );
@@ -64,9 +68,9 @@ class SassConvertPanel
 
 
 
-    horizontal_separator = build_separator(@tabFolder)
+    #horizontal_separator = build_separator(@tabFolder)
     # -- control button --
-    build_control_button(horizontal_separator)
+    build_control_button(@tabFolder)
     #build_control_button(@less_group)
     
     
@@ -106,7 +110,7 @@ class SassConvertPanel
 
     @select_to_target_btn = Swt::Widgets::Button.new(composite, Swt::SWT::PUSH | Swt::SWT::CENTER)
     @select_to_target_btn.setText('>')
-    @select_to_target_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], top: ["top", 145]}, 35) )
+    @select_to_target_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], top: ["top", 120]}, 35) )
     @select_to_target_btn.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt|  
       
       #item.setText(@dir_tree.selected_val.relative_path_from(Pathname.new(dir_label.getText)).to_s)
@@ -477,7 +481,7 @@ class SassConvertPanel
     save_btn.setText('Save')
     layoutdata = Swt::Layout::FormData.new(button_width, Swt::SWT::DEFAULT)
     layoutdata.right = Swt::Layout::FormAttachment.new( behind, 0, Swt::SWT::RIGHT)
-    layoutdata.top  = Swt::Layout::FormAttachment.new( behind, 10, Swt::SWT::BOTTOM)
+    layoutdata.top  = Swt::Layout::FormAttachment.new( behind, 5, Swt::SWT::BOTTOM)
     save_btn.setLayoutData( layoutdata )
     save_btn.addListener(Swt::SWT::Selection, save_handler)
     save_btn.pack
