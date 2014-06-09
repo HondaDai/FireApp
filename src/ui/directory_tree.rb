@@ -9,10 +9,9 @@ class DirectoryTree
     @dir = Pathname.new(dir)
     @mapping = Hash.new
 
-    @tree.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt|  
-      @selected = @mapping[evt.item]
-      puts @selected
-    end)
+    #@tree.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt|  
+    #  @selected_item = evt.item
+    #end)
 
     @tree.addListener(Swt::SWT::Expand, Swt::Widgets::Listener.impl do |method, evt|
       puts "Expand"
@@ -25,8 +24,21 @@ class DirectoryTree
     unfold_dir(@dir, @tree)
   end
 
-  def selected
-    @selected
+  def deselect
+    @tree.deselectAll
+  end
+
+  def selected_item
+    #@selected_item
+    if @tree.getSelectionCount > 0
+      @tree.getSelection[0] 
+    else
+      nil
+    end
+  end
+
+  def selected_val
+    @mapping[selected_item]
   end
 
   def fold_dir(parent_node)

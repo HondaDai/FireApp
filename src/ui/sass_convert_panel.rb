@@ -50,7 +50,7 @@ class SassConvertPanel
 
 
     dir_label = Swt::Widgets::Label.new(@shell, Swt::SWT::PUSH)
-    dir_label.setLayoutData( build_layout_data(horizontal_separator, {left: ["left", 0], bottom: ["top", 10]}, 270) )
+    dir_label.setLayoutData( build_layout_data(horizontal_separator, {left: ["left", 0], bottom: ["top", 10]}, 265) )
     dir_label.setText(Pathname.new(Compass.configuration.project_path).realpath.to_s)
     dir_label.pack
     
@@ -76,13 +76,25 @@ class SassConvertPanel
     item.setText("Node 3")
 =end
 
-    @select_file_btn = Swt::Widgets::Button.new(@shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
-    @select_file_btn.setText('>')
-    @select_file_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], center: ["top", 0]}, 70) )
-    select_dir_btn.addListener(Swt::SWT::Selection, select_handler("QQ"))
+    @select_to_target_btn = Swt::Widgets::Button.new(@shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
+    @select_to_target_btn.setText('>')
+    @select_to_target_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], top: ["top", 145]}, 35) )
+    @select_to_target_btn.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt|  
+      item = Swt::Widgets::TreeItem.new(@target_tree, Swt::SWT::NONE)
+      #item.setText(@dir_tree.selected_val.relative_path_from(Pathname.new(dir_label.getText)).to_s)
+      item.setText(@dir_tree.selected_val.to_s)
+      @dir_tree.deselect
+    end)
+
+    @deselect_to_target_btn = Swt::Widgets::Button.new(@shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
+    @deselect_to_target_btn.setText('<')
+    @deselect_to_target_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], top: ["top", 175]}, 35) )
+    @deselect_to_target_btn.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt|  
+      @target_tree.clear(@target_tree.indexOf(evt.item), true )
+    end)
     
     @target_tree = Swt::Widgets::Tree.new(@shell, Swt::SWT::BORDER)
-    @target_tree.setLayoutData (build_layout_data(@select_file_btn, {right: ["left", 10], center: ["top", 0]}, 310, 350) )
+    @target_tree.setLayoutData (build_layout_data(@dir_tree.widget, {right: ["left", 60], top: ["top", 0]}, 310, 350) )
 
 
 
