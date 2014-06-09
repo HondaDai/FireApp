@@ -76,13 +76,18 @@ class SassConvertPanel
     item.setText("Node 3")
 =end
 
+    @target_dir_arr = Array.new
+
     @select_to_target_btn = Swt::Widgets::Button.new(@shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
     @select_to_target_btn.setText('>')
     @select_to_target_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], top: ["top", 145]}, 35) )
     @select_to_target_btn.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt|  
-      item = Swt::Widgets::TreeItem.new(@target_tree, Swt::SWT::NONE)
+      
       #item.setText(@dir_tree.selected_val.relative_path_from(Pathname.new(dir_label.getText)).to_s)
-      item.setText(@dir_tree.selected_val.to_s)
+      @target_dir_arr += @dir_tree.selected_paths
+      @target_dir_arr.uniq!
+
+      rebuild_target_tree
       @dir_tree.deselect
     end)
 
@@ -90,7 +95,15 @@ class SassConvertPanel
     @deselect_to_target_btn.setText('<')
     @deselect_to_target_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], top: ["top", 175]}, 35) )
     @deselect_to_target_btn.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt|  
-      @target_tree.clear(@target_tree.indexOf(evt.item), true )
+      
+      @target_tree.getSelection.to_a.each do |item|
+        @target_dir_arr.delete_if do |dir|
+            dir.realpath == Pathname.new(item.getText).realpath
+        end
+      end
+
+      rebuild_target_tree
+
     end)
     
     @target_tree = Swt::Widgets::Tree.new(@shell, Swt::SWT::BORDER)
@@ -105,6 +118,15 @@ class SassConvertPanel
     
     
     @shell.pack
+  end
+
+  def rebuild_target_tree
+    @target_tree.clearAll(true)
+    @target_tree.removeAll
+    @target_dir_arr.each do |dir|
+      item = Swt::Widgets::TreeItem.new(@target_tree, Swt::SWT::NONE)
+      item.setText(dir.to_s)
+    end
   end
 
   def build_separator(align)

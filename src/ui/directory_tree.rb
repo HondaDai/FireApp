@@ -5,6 +5,7 @@ class DirectoryTree
 
 
   def initialize(shell, style, dir)
+    # @tree = Swt::Widgets::Tree.new(shell, style | Swt::SWT::SINGLE)
     @tree = Swt::Widgets::Tree.new(shell, style | Swt::SWT::SINGLE)
     @dir = Pathname.new(dir)
     @mapping = Hash.new
@@ -28,17 +29,18 @@ class DirectoryTree
     @tree.deselectAll
   end
 
-  def selected_item
-    #@selected_item
-    if @tree.getSelectionCount > 0
-      @tree.getSelection[0] 
-    else
-      nil
-    end
+  def mapping
+    @mapping
   end
 
-  def selected_val
-    @mapping[selected_item]
+  def selected_items
+    @tree.getSelection.to_a
+  end
+
+  def selected_paths
+    selected_items.map do |item|
+      @mapping[item]
+    end
   end
 
   def fold_dir(parent_node)
@@ -72,8 +74,6 @@ class DirectoryTree
           offset = directory_offset + file_offset
           file_offset = file_offset+1
         end
-
-        puts offset
 
         item = Swt::Widgets::TreeItem.new(parent_node, Swt::SWT::NONE, offset)
         item.setText(d.basename.to_s)
