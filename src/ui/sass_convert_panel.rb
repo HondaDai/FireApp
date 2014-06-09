@@ -6,6 +6,8 @@ class SassConvertPanel
 
   def initialize()
     @display = Swt::Widgets::Display.get_current
+    @target_dir_arr = Array.new
+    @window_width = 620
   end
 
   def open
@@ -21,6 +23,10 @@ class SassConvertPanel
 
   def close
     @shell.dispose if @shell and !@shell.isDisposed
+  end
+
+  def project_path
+    Compass.configuration.project_path
   end
 
   def create_window
@@ -42,43 +48,63 @@ class SassConvertPanel
     font=Swt::Graphics::Font.new(@display, font_data)
     panel_title_label.setFont(font)
     panel_title_label.setText("Sass Converter")
-    layoutdata = Swt::Layout::FormData.new(750, Swt::SWT::DEFAULT)
+    layoutdata = Swt::Layout::FormData.new(@window_width, Swt::SWT::DEFAULT)
     panel_title_label.setLayoutData( layoutdata )
 
     # -- horizontal separator --
     horizontal_separator = build_separator(panel_title_label)
 
-
-    dir_label = Swt::Widgets::Label.new(@shell, Swt::SWT::PUSH)
-    dir_label.setLayoutData( build_layout_data(horizontal_separator, {left: ["left", 0], bottom: ["top", 10]}, 265) )
-    dir_label.setText(Pathname.new(Compass.configuration.project_path).realpath.to_s)
-    dir_label.pack
+    @tabFolder = Swt::Widgets::TabFolder.new(@shell, Swt::SWT::BORDER)
+    @tabFolder.setLayoutData( build_layout_data(horizontal_separator, {left: ["left", 0], bottom: ["top", 10]}, @window_width, 320) )
     
 
-    @select_dir_btn = Swt::Widgets::Button.new(@shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
+    file_selector_tab = Swt::Widgets::TabItem.new( @tabFolder, Swt::SWT::NONE)
+    file_selector_tab.setControl( self.file_selector_composite );
+    file_selector_tab.setText('File Selector')
+
+
+
+    horizontal_separator = build_separator(@tabFolder)
+    # -- control button --
+    build_control_button(horizontal_separator)
+    #build_control_button(@less_group)
+    
+    
+    @shell.pack
+  end
+
+  def rebuild_target_tree
+    @target_tree.clearAll(true)
+    @target_tree.removeAll
+    @target_dir_arr.each do |dir|
+      item = Swt::Widgets::TreeItem.new(@target_tree, Swt::SWT::NONE)
+      item.setText dir.relative_path_from(Pathname.new(@dir_label.getText)).to_s
+    end
+  end
+
+  def file_selector_composite
+    composite =Swt::Widgets::Composite.new(@tabFolder, Swt::SWT::NO_MERGE_PAINTS )
+    layout = Swt::Layout::FormLayout.new
+    layout.marginWidth = layout.marginHeight = 10
+    composite.layout = layout
+
+    @dir_label = Swt::Widgets::Label.new(composite, Swt::SWT::PUSH)
+    @dir_label.setLayoutData( build_layout_data(composite, {left: ["left", 0], bottom: ["top", 10]}, 265) )
+    @dir_label.setText(Pathname.new(project_path).realpath.to_s)
+    @dir_label.pack
+    
+
+    @select_dir_btn = Swt::Widgets::Button.new(composite, Swt::SWT::PUSH | Swt::SWT::CENTER)
     @select_dir_btn.setText('Select')
-    @select_dir_btn.setLayoutData( build_layout_data(dir_label, {right: ["left", 1], center: ["top", 0]}, 70) )
-    @select_dir_btn.addListener(Swt::SWT::Selection, select_handler(dir_label))
+    @select_dir_btn.setLayoutData( build_layout_data(@dir_label, {right: ["left", 1], center: ["top", 0]}, 70) )
+    @select_dir_btn.addListener(Swt::SWT::Selection, select_handler(@dir_label))
 
 
-    @dir_tree = DirectoryTree.new(@shell, Swt::SWT::BORDER, dir_label.getText)
-    @dir_tree.setLayoutData (build_layout_data(dir_label, {left: ["left", 0], bottom: ["top", 10]}, 310, 350) )
-
-=begin
-    item = Swt::Widgets::TreeItem.new(@dir_tree, Swt::SWT::NONE)
-    item.setText("Node 1")
-
-    sub_item = Swt::Widgets::TreeItem.new(item, Swt::SWT::NONE)
-    sub_item.setText("Node 2")
+    @dir_tree = DirectoryTree.new(composite, Swt::SWT::BORDER, @dir_label.getText)
+    @dir_tree.setLayoutData (build_layout_data(@dir_label, {left: ["left", 0], bottom: ["top", 10]}, 260, 300) )
 
 
-    item = Swt::Widgets::TreeItem.new(@dir_tree, Swt::SWT::NONE)
-    item.setText("Node 3")
-=end
-
-    @target_dir_arr = Array.new
-
-    @select_to_target_btn = Swt::Widgets::Button.new(@shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
+    @select_to_target_btn = Swt::Widgets::Button.new(composite, Swt::SWT::PUSH | Swt::SWT::CENTER)
     @select_to_target_btn.setText('>')
     @select_to_target_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], top: ["top", 145]}, 35) )
     @select_to_target_btn.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt|  
@@ -91,7 +117,7 @@ class SassConvertPanel
       @dir_tree.deselect
     end)
 
-    @deselect_to_target_btn = Swt::Widgets::Button.new(@shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
+    @deselect_to_target_btn = Swt::Widgets::Button.new(composite, Swt::SWT::PUSH | Swt::SWT::CENTER)
     @deselect_to_target_btn.setText('<')
     @deselect_to_target_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], top: ["top", 175]}, 35) )
     @deselect_to_target_btn.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt|  
@@ -106,32 +132,15 @@ class SassConvertPanel
 
     end)
     
-    @target_tree = Swt::Widgets::Tree.new(@shell, Swt::SWT::BORDER)
-    @target_tree.setLayoutData (build_layout_data(@dir_tree.widget, {right: ["left", 60], top: ["top", 0]}, 310, 350) )
+    @target_tree = Swt::Widgets::Tree.new(composite, Swt::SWT::BORDER)
+    @target_tree.setLayoutData (build_layout_data(@dir_tree.widget, {right: ["left", 60], top: ["top", 0]}, 260, 300) )
 
-
-
-    horizontal_separator = build_separator(@dir_tree.widget)
-    # -- control button --
-    build_control_button(horizontal_separator)
-    #build_control_button(@less_group)
-    
-    
-    @shell.pack
-  end
-
-  def rebuild_target_tree
-    @target_tree.clearAll(true)
-    @target_tree.removeAll
-    @target_dir_arr.each do |dir|
-      item = Swt::Widgets::TreeItem.new(@target_tree, Swt::SWT::NONE)
-      item.setText(dir.to_s)
-    end
+    composite
   end
 
   def build_separator(align)
     horizontal_separator = Swt::Widgets::Label.new(@shell, Swt::SWT::SEPARATOR | Swt::SWT::HORIZONTAL)
-    horizontal_separator.setLayoutData( build_layout_data(align, {left: ["left", 0], bottom: ["top", 10]}, 750) )
+    horizontal_separator.setLayoutData( build_layout_data(align, {left: ["left", 0], bottom: ["top", 10]}, @window_width) )
     horizontal_separator
   end
 
