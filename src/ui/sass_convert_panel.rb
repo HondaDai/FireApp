@@ -1,6 +1,6 @@
 require 'singleton'
 require 'pathname'
-#require 'sass/css'
+require 'fileutils'
 
 class SassConvertPanel
   include Singleton
@@ -133,6 +133,8 @@ class SassConvertPanel
     @select_to_target_btn.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt|  
       
       #item.setText(@dir_tree.selected_val.relative_path_from(Pathname.new(dir_label.getText)).to_s)
+      
+      puts @dir_tree.selected_paths
       @target_dir_arr += @dir_tree.selected_paths
       @target_dir_arr.uniq!
 
@@ -525,7 +527,8 @@ class SassConvertPanel
   end
 
   def cancel_handler
-    Swt::Widgets::Listener.impl do |method, evt|   
+    Swt::Widgets::Listener.impl do |method, evt| 
+      @target_dir_arr = Array.new
       close
     end
   end
@@ -572,15 +575,36 @@ class SassConvertPanel
     Swt::Widgets::Listener.impl do |method, evt|
       # Sass::CSS.new(File.read("test.css")).render(:scss)
 
-      build_path = File.join(@dir_label.getText, "converted_sass_#{Time.now.strftime('%Y%m%d%H%M%S')}")
+      source_path = Pathname.new(@dir_label.getText)
+      build_path = File.join(source_path, "converted_sass_#{Time.now.strftime('%Y%m%d%H%M%S')}")
       report_window = Report.new('Start convert css to sass!') do
         Swt::Program.launch(build_path)
       end
-
+=begin
       @target_dir_arr.reduce([]) do |res, dir|
         res + get_all_files(Pathname.new(dir), /\.css$/)
-      end.each do |dir|
-        report_window.append dir.to_s
+      end
+=end
+      @target_dir_arr.each do |dir|
+=begin
+        if dir.directory?
+          build_file_path = File.join(build_path, dir.realpath.basename)
+        else
+          build_file_path = build_path
+        end
+        FileUtils.mkdir_p(build_file_path)
+=end
+        get_all_files(dir, /\.css$/).each do |css_file_path|
+          build_file_path = File.join(build_path, css_file_path.relative_path_from(source_path).parent.to_s)
+          FileUtils.mkdir_p build_file_path
+
+          File.open(File.join(build_file_path, css_file_path.realpath.basename.to_s.gsub(/\.css$/, ".scss")), "w") do |f|
+            f.write(Sass::CSS.new(File.read(css_file_path.to_s)).render(:scss))
+          end
+          report_window.append css_file_path.to_s
+        end
+
+        
       end
 
     end
