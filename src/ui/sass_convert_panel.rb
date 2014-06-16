@@ -493,23 +493,23 @@ class SassConvertPanel
     button_width = 90
     button_width = button_width - 10 if org.jruby.platform.Platform::IS_WINDOWS
 
-    # -- save button --
-    save_btn = Swt::Widgets::Button.new(@shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
-    save_btn.setText('Save')
+    # -- convert button --
+    convert_btn = Swt::Widgets::Button.new(@shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
+    convert_btn.setText('Convert')
     layoutdata = Swt::Layout::FormData.new(button_width, Swt::SWT::DEFAULT)
     layoutdata.right = Swt::Layout::FormAttachment.new( behind, 0, Swt::SWT::RIGHT)
     layoutdata.top  = Swt::Layout::FormAttachment.new( behind, 5, Swt::SWT::BOTTOM)
-    save_btn.setLayoutData( layoutdata )
-    save_btn.addListener(Swt::SWT::Selection, save_handler)
-    save_btn.pack
+    convert_btn.setLayoutData( layoutdata )
+    convert_btn.addListener(Swt::SWT::Selection, save_handler)
+    convert_btn.pack
 
     # -- cancel button --
     cancel_btn = Swt::Widgets::Button.new(@shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
     cancel_btn.setText('Cancel')
     layoutdata = Swt::Layout::FormData.new(button_width, Swt::SWT::DEFAULT)
-    layoutdata.right = Swt::Layout::FormAttachment.new( save_btn, 5, Swt::SWT::LEFT)
-    layoutdata.right = Swt::Layout::FormAttachment.new( save_btn, -5, Swt::SWT::LEFT) if org.jruby.platform.Platform::IS_WINDOWS
-    layoutdata.top  = Swt::Layout::FormAttachment.new( save_btn, 0, Swt::SWT::CENTER)
+    layoutdata.right = Swt::Layout::FormAttachment.new( convert_btn, 5, Swt::SWT::LEFT)
+    layoutdata.right = Swt::Layout::FormAttachment.new( convert_btn, -5, Swt::SWT::LEFT) if org.jruby.platform.Platform::IS_WINDOWS
+    layoutdata.top  = Swt::Layout::FormAttachment.new( convert_btn, 0, Swt::SWT::CENTER)
     cancel_btn.setLayoutData( layoutdata )
     cancel_btn.addListener(Swt::SWT::Selection, cancel_handler)
     cancel_btn.pack
