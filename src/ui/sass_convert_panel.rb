@@ -68,6 +68,12 @@ class SassConvertPanel
 
 
 
+    options_tab = Swt::Widgets::TabItem.new( @tabFolder, Swt::SWT::NONE)
+    options_tab.setControl( self.options_composite );
+    options_tab.setText('Options')
+
+
+
     #horizontal_separator = build_separator(@tabFolder)
     # -- control button --
     build_control_button(@tabFolder)
@@ -84,6 +90,17 @@ class SassConvertPanel
       item = Swt::Widgets::TreeItem.new(@target_tree, Swt::SWT::NONE)
       item.setText dir.relative_path_from(Pathname.new(@dir_label.getText)).to_s
     end
+  end
+
+  def options_composite
+    composite =Swt::Widgets::Composite.new(@tabFolder, Swt::SWT::NO_MERGE_PAINTS )
+    layout = Swt::Layout::FormLayout.new
+    layout.marginWidth = layout.marginHeight = 10
+    composite.layout = layout
+
+    
+
+    composite
   end
 
   def file_selector_composite
@@ -110,7 +127,7 @@ class SassConvertPanel
 
     @select_to_target_btn = Swt::Widgets::Button.new(composite, Swt::SWT::PUSH | Swt::SWT::CENTER)
     @select_to_target_btn.setText('>')
-    @select_to_target_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], top: ["top", 120]}, 35) )
+    @select_to_target_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], top: ["top", 125]}, 35) )
     @select_to_target_btn.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt|  
       
       #item.setText(@dir_tree.selected_val.relative_path_from(Pathname.new(dir_label.getText)).to_s)
@@ -123,7 +140,7 @@ class SassConvertPanel
 
     @deselect_to_target_btn = Swt::Widgets::Button.new(composite, Swt::SWT::PUSH | Swt::SWT::CENTER)
     @deselect_to_target_btn.setText('<')
-    @deselect_to_target_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], top: ["top", 175]}, 35) )
+    @deselect_to_target_btn.setLayoutData( build_layout_data(@dir_tree.widget, {right: ["left", 10], top: ["top", 155]}, 35) )
     @deselect_to_target_btn.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt|  
       
       @target_tree.getSelection.to_a.each do |item|
