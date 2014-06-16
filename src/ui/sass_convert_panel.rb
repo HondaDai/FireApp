@@ -1,4 +1,6 @@
 require 'singleton'
+require 'pathname'
+#require 'sass/css'
 
 class SassConvertPanel
   include Singleton
@@ -500,7 +502,7 @@ class SassConvertPanel
     layoutdata.right = Swt::Layout::FormAttachment.new( behind, 0, Swt::SWT::RIGHT)
     layoutdata.top  = Swt::Layout::FormAttachment.new( behind, 5, Swt::SWT::BOTTOM)
     convert_btn.setLayoutData( layoutdata )
-    convert_btn.addListener(Swt::SWT::Selection, save_handler)
+    convert_btn.addListener(Swt::SWT::Selection, convert_handler)
     convert_btn.pack
 
     # -- cancel button --
@@ -544,6 +546,43 @@ class SassConvertPanel
       else
         App.alert("Can't use this folder.")
       end
+    end
+  end
+
+  def get_all_files(dir, filename_filter = nil)
+    if dir.directory?
+      dir.children.reduce([]) do |r, d| 
+        r + get_all_files(d, filename_filter)
+      end
+    else
+      if filename_filter
+        if dir.basename.to_s =~ filename_filter
+          [dir] 
+        else
+          []
+        end
+      else
+        [dir]
+      end
+    end
+  end
+
+  def convert_handler
+    require 'sass/css'
+    Swt::Widgets::Listener.impl do |method, evt|
+      # Sass::CSS.new(File.read("test.css")).render(:scss)
+
+      build_path = File.join(@dir_label.getText, "converted_sass_#{Time.now.strftime('%Y%m%d%H%M%S')}")
+      report_window = Report.new('Start convert css to sass!') do
+        Swt::Program.launch(build_path)
+      end
+
+      @target_dir_arr.reduce([]) do |res, dir|
+        res + get_all_files(Pathname.new(dir), /\.css$/)
+      end.each do |dir|
+        report_window.append dir.to_s
+      end
+
     end
   end
 
