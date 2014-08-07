@@ -232,6 +232,10 @@ class Tray
     end
   end
 
+  def upgrade_extensions_handler()
+    
+  end
+
   def rebuild_history_menuitem
     delete_history_menuitem
     build_history_menuitem
@@ -601,7 +605,15 @@ class Tray
       @install_item.menu = Swt::Widgets::Menu.new( @menu )
       build_compass_framework_menuitem( @install_item.menu, install_project_handler )
       
-      build_change_options_panel(@menu.indexOf(@install_item) +1 )
+
+      @upgrade_extensions_item = add_menu_item( "Upgrade Extensions", 
+                                     upgrade_extensions_handler, 
+                                     Swt::SWT::PUSH,
+                                     @menu, 
+                                     @menu.indexOf(@install_item) +1 )
+
+
+      build_change_options_panel(@menu.indexOf(@upgrade_extensions_item) +1 )
 
       @clean_item =  add_menu_item( "Clean && Compile", 
                                    clean_project_handler, 

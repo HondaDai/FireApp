@@ -266,5 +266,14 @@ module App
     }
   end
 
+  def download_file(url, destination)
+    require 'open-uri'
+    File.open(destination, "wb") do |saved_file|
+      open(url, "rb") do |read_file|
+        saved_file.write(read_file.read)
+      end
+    end
+  end
+
 end
 
