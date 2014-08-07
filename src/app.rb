@@ -134,9 +134,6 @@ module App
 
       scan_library(compass_gems_path)
 
-      extensions_gems_path = File.join(LIB_PATH, "ruby", "compass_extensions" )
-      scan_library( extensions_gems_path )
-
       require "compass"
       require "compass/exec"
     end
@@ -256,7 +253,7 @@ module App
   end
 
   def unzip_file (file, destination)
-    require 'zip/zip'
+    require 'zip'
     Zip::ZipFile.open(file) { |zip_file|
      zip_file.each { |f|
        f_path=File.join(destination, f.name)

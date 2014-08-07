@@ -1,7 +1,7 @@
 
 require "digest/md5"
 require "json"
-require "zip/zip"
+require "zip"
 require 'net/http/post/multipart'
 require "tempfile"
 class TheHoldUploader
