@@ -46,6 +46,7 @@ class Tray
     build_compass_framework_menuitem( item.menu, create_project_handler )
 
     item =  add_menu_item( "Open Extensions Folder", open_extensions_folder_handler, Swt::SWT::PUSH)
+    item =  add_menu_item( "Upgrade Extensions", upgrade_extensions_handler, Swt::SWT::PUSH)
     item =  add_menu_item( "Preference...", preference_handler, Swt::SWT::PUSH)
 
     item =  add_menu_item( "About", open_about_link_handler, Swt::SWT::CASCADE)
@@ -609,16 +610,9 @@ class Tray
                                      @menu.indexOf(@open_project_item) +1 )
       @install_item.menu = Swt::Widgets::Menu.new( @menu )
       build_compass_framework_menuitem( @install_item.menu, install_project_handler )
-      
-
-      @upgrade_extensions_item = add_menu_item( "Upgrade Extensions", 
-                                     upgrade_extensions_handler, 
-                                     Swt::SWT::PUSH,
-                                     @menu, 
-                                     @menu.indexOf(@install_item) +1 )
 
 
-      build_change_options_panel(@menu.indexOf(@upgrade_extensions_item) +1 )
+      build_change_options_panel(@menu.indexOf(@install_item) +1 )
 
       @clean_item =  add_menu_item( "Clean && Compile", 
                                    clean_project_handler, 
