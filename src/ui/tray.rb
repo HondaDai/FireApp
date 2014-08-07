@@ -190,10 +190,6 @@ class Tray
 
   def open_extensions_folder_handler
     Swt::Widgets::Listener.impl do |method, evt|
-      if !File.exists?(App.shared_extensions_path)
-        FileUtils.mkdir_p(App.shared_extensions_path)
-        FileUtils.cp(File.join(LIB_PATH, "documents", "extensions_readme.txt"), File.join(App.shared_extensions_path, "readme.txt") )
-      end
 
       Swt::Program.launch(App.shared_extensions_path)
     end
