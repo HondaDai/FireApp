@@ -232,8 +232,13 @@ class Tray
     end
   end
 
-  def upgrade_extensions_handler()
-    
+  def upgrade_extensions_handler
+    ext_url = "https://github.com/HondaDai/compassapp-extensions/archive/master.zip"
+    ext_zipfile = "#{App.shared_extensions_path}/compassapp-ext.zip"
+    ext_folder = "#{App.shared_extensions_path}/compassapp-ext"
+    App.download_file(ext_url, ext_zipfile)
+    App.unzip_file(ext_zipfile, ext_folder)
+
   end
 
   def rebuild_history_menuitem
