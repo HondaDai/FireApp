@@ -184,6 +184,7 @@ end
 if File.exists?( App.shared_extensions_path ) 
   # App.scan_library( App.shared_extensions_path )
   Compass::Frameworks.discover( App.shared_extensions_path ) 
+  Compass::Frameworks.discover( "#{App.shared_extensions_path}/compassapp-extensions-master" ) 
 end 
 
 

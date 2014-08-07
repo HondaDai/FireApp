@@ -234,12 +234,34 @@ class Tray
   end
 
   def upgrade_extensions_handler
-    ext_url = "https://github.com/HondaDai/compassapp-extensions/archive/master.zip"
-    ext_zipfile = "#{App.shared_extensions_path}/compassapp-ext.zip"
-    ext_folder = "#{App.shared_extensions_path}/compassapp-ext"
-    App.download_file(ext_url, ext_zipfile)
-    App.unzip_file(ext_zipfile, ext_folder)
+    Swt::Widgets::Listener.impl do |method, evt|
+      ext_url = "https://github.com/HondaDai/compassapp-extensions/archive/master.zip"
+      ext_zipfile = "#{App.shared_extensions_path}/compassapp-ext.zip"
+      ext_folder = "#{App.shared_extensions_path}/compassapp-extensions-master"
 
+      report_window = App.report('Start build project!') do  
+        Tray.instance.stop_watch
+        java.lang.System.exit(0)
+      end 
+
+
+
+      FileUtils.rm_rf(ext_folder)
+      report_window.append "Remove old version... ok"
+
+      report_window.append "Download new version... "
+      App.download_file(ext_url, ext_zipfile)
+      report_window.append "Download new version... ok"
+
+      App.unzip_file(ext_zipfile, App.shared_extensions_path)
+      report_window.append "Extract file... ok"
+
+      FileUtils.rm_rf(ext_zipfile)
+      report_window.append "Clean temporary file... ok"
+      # Compass::Frameworks.discover( ext_folder ) 
+
+      report_window.append "\n** You have to restart Fire.app to apply this change."
+    end
   end
 
   def rebuild_history_menuitem
