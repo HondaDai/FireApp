@@ -252,6 +252,12 @@ module App
     folder_path
   end
 
+  def shared_default_extensions_path
+    folder_path = "#{App.shared_extensions_path}/compassapp-extensions-master"
+    FileUtils.mkdir_p(folder_path) if !File.exists?(folder_path)
+    folder_path
+  end
+
   def unzip_file (file, destination)
     Zip::File.open(file) { |zip_file|
      zip_file.each { |f|
