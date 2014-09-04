@@ -7,6 +7,7 @@ extension_name = %w{
   compass-normalize
   html5-boilerplate
   susy
+  breakpoint
 }
 
 tmp_dir = 'tmp_ext'
